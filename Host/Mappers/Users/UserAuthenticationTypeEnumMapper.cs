@@ -1,7 +1,7 @@
-using ServiceTemplate.DataAccess.Models.Users.Enums;
-using ServiceTemplate.DataContracts.Dtos.Users.Enums;
+using OggettoCase.DataAccess.Models.Users.Enums;
+using OggettoCase.DataContracts.Dtos.Users.Enums;
 
-namespace ServiceTemplate.Mappers.Users;
+namespace OggettoCase.Mappers.Users;
 
 /// <summary>
 /// Mapping Template enum types to dto and reverse

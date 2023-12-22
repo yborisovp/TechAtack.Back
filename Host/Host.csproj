@@ -3,15 +3,27 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <LangVersion>latest</LangVersion>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <RootNamespace>ServiceTemplate</RootNamespace>
+        <RootNamespace>OggettoCase</RootNamespace>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <ContainerImageName>docker-net-example</ContainerImageName>
+        <ContainerBaseImage>mcr.microsoft.com/dotnet/aspnet:8.0-preview</ContainerBaseImage>
+        <ContainerImageTags>2.0.0;latest</ContainerImageTags>
+        
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="EFCore.NamingConventions" Version="7.0.2" />
+        <PackageReference Include="Google.Apis.Auth" Version="1.64.0" />
+        <PackageReference Include="Google.Apis.Calendar.v3" Version="1.64.0.3248" />
+        <PackageReference Include="Google.Apis.Core" Version="1.64.0" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.10"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.5">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
         <PackageReference Include="Serilog" Version="3.1.1" />
         <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
         <PackageReference Include="Serilog.Sinks.Async" Version="1.5.0" />
@@ -20,17 +32,11 @@
         <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.5.0" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Content Include="..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
 
 
     <ItemGroup>
-      <ProjectReference Include="..\ServiceTemplate.DataAccess\ServiceTemplate.DataAccess.csproj" />
-      <ProjectReference Include="..\ServiceTemplate.DataContracts\ServiceTemplate.DataContracts.csproj" />
+      <ProjectReference Include="..\OggettoCase.DataAccess\OggettoCase.DataAccess.csproj" />
+      <ProjectReference Include="..\OggettoCase.DataContracts\OggettoCase.DataContracts.csproj" />
 
 
 

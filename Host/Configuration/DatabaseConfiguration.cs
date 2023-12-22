@@ -1,4 +1,4 @@
-namespace ServiceTemplate.Configuration;
+namespace OggettoCase.Configuration;
 
 public class DatabaseConfiguration
 {

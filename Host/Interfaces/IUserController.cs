@@ -1,6 +1,6 @@
-using ServiceTemplate.DataContracts.Dtos.Users;
+using OggettoCase.DataContracts.Dtos.Users;
 
-namespace ServiceTemplate.Interfaces;
+namespace OggettoCase.Interfaces;
 
 /// <summary>
 /// Controller to grant access to Users

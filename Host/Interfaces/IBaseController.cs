@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace ServiceTemplate.Interfaces;
+namespace OggettoCase.Interfaces;
 
 /// <summary>
 /// Base controller methods to implement

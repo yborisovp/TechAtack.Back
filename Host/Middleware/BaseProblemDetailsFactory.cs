@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace ServiceTemplate.Middleware;
+namespace OggettoCase.Middleware;
 
 /// <summary>
 /// Custom implementation of Problem details

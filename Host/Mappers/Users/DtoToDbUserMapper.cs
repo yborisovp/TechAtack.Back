@@ -1,8 +1,9 @@
-using ServiceTemplate.DataAccess.Models.Users;
-using ServiceTemplate.DataContracts.Dtos.Users;
-using ServiceTemplate.Mappers.Users;
+using OggettoCase.DataAccess.Dtos;
+using OggettoCase.DataAccess.Models.Users;
+using OggettoCase.DataContracts.Dtos.Users;
+using OggettoCase.Mappers.Users;
 
-namespace ServiceTemplate.Mappers.Templates;
+namespace OggettoCase.Mappers.Templates;
 
 /// <summary>
 /// Templates Mapper fromm db entity model to dto
@@ -26,5 +27,17 @@ public static class DtoToDbUserMapper
             Role = updatedUserDto.Role.ToEntity(),
             AuthenticationType = updatedUserDto.AuthenticationType.ToEntity()
         };
+    }
+
+    public static CreateUserEntityDto ToEntity(this CreateUserDto createUserDto)
+    {
+        return new CreateUserEntityDto(
+            createUserDto.Email,
+            createUserDto.Name,
+            createUserDto.Surname,
+            createUserDto.PictureUrl,
+            createUserDto.AuthenticationType.ToEntity(),
+            createUserDto.AccessToken
+        );
     }
 }

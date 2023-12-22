@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using ServiceTemplate.DataContracts.Dtos.Users;
-using ServiceTemplate.DataContracts.Interfaces;
-using ServiceTemplate.Interfaces;
+using OggettoCase.DataContracts.Dtos.Users;
+using OggettoCase.DataContracts.Interfaces;
+using OggettoCase.Interfaces;
 using Swashbuckle.AspNetCore.Annotations;
 
-namespace ServiceTemplate.Controllers;
+namespace OggettoCase.Controllers;
 
 /// <summary>
 /// API to control templates

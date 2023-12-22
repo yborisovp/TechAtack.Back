@@ -1,4 +1,4 @@
-namespace ServiceTemplate.Configuration;
+namespace OggettoCase.Configuration;
 
 /// <summary>
 /// Swagger settings

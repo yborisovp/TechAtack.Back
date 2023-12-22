@@ -1,7 +1,7 @@
-using ServiceTemplate.DataAccess.Models.Users;
-using ServiceTemplate.DataContracts.Dtos.Users;
+using OggettoCase.DataAccess.Models.Users;
+using OggettoCase.DataContracts.Dtos.Users;
 
-namespace ServiceTemplate.Mappers.Users;
+namespace OggettoCase.Mappers.Users;
 
 /// <summary>
 /// Templates Mapper from dto to db entity model

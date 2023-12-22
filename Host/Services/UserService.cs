@@ -1,10 +1,10 @@
-using ServiceTemplate.DataAccess.Interfaces;
-using ServiceTemplate.DataContracts.Dtos.Users;
-using ServiceTemplate.DataContracts.Interfaces;
-using ServiceTemplate.Mappers.Templates;
-using ServiceTemplate.Mappers.Users;
+using OggettoCase.DataAccess.Interfaces;
+using OggettoCase.DataContracts.Dtos.Users;
+using OggettoCase.DataContracts.Interfaces;
+using OggettoCase.Mappers.Templates;
+using OggettoCase.Mappers.Users;
 
-namespace ServiceTemplate.Services;
+namespace OggettoCase.Services;
 
 /// <summary>
 /// Service to grant access to db entities
@@ -12,14 +12,14 @@ namespace ServiceTemplate.Services;
 public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
-    private readonly ILogger<TemplateService> _logger;
+    private readonly ILogger<UserService> _logger;
 
     /// <summary>
     /// Constructor of an service
     /// </summary>
     /// <param name="userRepository"></param>
     /// <param name="logger"></param>
-    public UserService(IUserRepository userRepository, ILogger<TemplateService> logger)
+    public UserService(IUserRepository userRepository, ILogger<UserService> logger)
     {
         _userRepository = userRepository;
         _logger = logger;
@@ -93,5 +93,29 @@ public class UserService : IUserService
 
         _logger.LogDebug("Successfully delete {name of} with id: '{id}'", nameof(UserDto), id);
         return deletedId;
+    }
+    
+    /// <inheritdoc />
+    public async Task<UserDto?> GetUserByEmailAsync(string email, CancellationToken ct = default)
+    {
+        _logger.LogDebug("Get {name of} with email: '{id}'", nameof(UserDto), email);
+        var user = await _userRepository.GetByEmailAsync(email, ct);
+
+        if (user is null)
+        {
+            _logger.LogDebug("{nameof(UserDto)} with email: '{email}' doesn't exist", nameof(UserDto), email);
+            return null;
+        }
+
+        _logger.LogDebug("Successfully received {name of} with id: '{id}'", nameof(UserDto), email);
+
+        return user.ToDto();
+    }
+
+    public async Task<UserDto> CreateUserAsync(CreateUserDto createUserParams, CancellationToken ct)
+    {
+        var user = await _userRepository.CreateUserAsync(createUserParams.ToEntity(), ct);
+
+        return user.ToDto();
     }
 }
