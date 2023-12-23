@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using OggettoCase.DataAccess.Models.Calendars;
+using OggettoCase.DataAccess.Models.Comments;
 using OggettoCase.DataAccess.Models.Users;
 using Toolbelt.ComponentModel.DataAnnotations;
 
@@ -10,6 +12,8 @@ public class DatabaseContext : DbContext
     public const string DefaultMigrationHistoryTableName = "__MigrationsHistory";
     
     public DbSet<User> Users { get; set; } = null!;
+    public DbSet<Comment> Comments { get; set; } = null!;
+    public DbSet<Calendar> Calendars { get; set; } = null!;
 
     public DatabaseContext(DbContextOptions options)
         : base(options)
@@ -20,5 +24,11 @@ public class DatabaseContext : DbContext
     {
         modelBuilder.HasDefaultSchema(DefaultSchema);
         modelBuilder.BuildIndexesFromAnnotations();
+
+        modelBuilder.Entity<Calendar>().HasOne(x => x.Owner).WithMany(x => x.CalendarEvents)
+            .HasForeignKey(x => x.OwnerId).HasConstraintName("owner_id");
+
+        modelBuilder.Entity<Comment>().HasOne(x => x.Calendar).WithMany(x => x.Comments)
+            .HasForeignKey(x => x.CalendarId).HasConstraintName("calendar_event_id");
     }
 }

@@ -41,4 +41,18 @@ public static class UserRoleEnumMapper
             _ => throw new ArgumentOutOfRangeException(nameof(templateEnum), templateEnum, null)
         };
     }
+    public static UserRoleEnum? ToEntity(this UserRoleEnumDto? templateEnum)
+    {
+        if (templateEnum is null)
+        {
+            return null;
+        }
+        return templateEnum switch
+        {
+            OggettoCase.DataContracts.Dtos.Users.Enums.UserRoleEnumDto.Admin => UserRoleEnum.Admin,
+            OggettoCase.DataContracts.Dtos.Users.Enums.UserRoleEnumDto.Specialist => UserRoleEnum.Specialist,
+            OggettoCase.DataContracts.Dtos.Users.Enums.UserRoleEnumDto.Normal => UserRoleEnum.Normal,
+            _ => throw new ArgumentOutOfRangeException(nameof(templateEnum), templateEnum, null)
+        };
+    }
 }

@@ -1,3 +1,5 @@
+using OggettoCase.DataContracts.Dtos.Users;
+
 namespace OggettoCase.DataContracts.Interfaces;
 
 public interface IBaseService<TDto, TUniqueIdentifier, in TDtoToUpdate>

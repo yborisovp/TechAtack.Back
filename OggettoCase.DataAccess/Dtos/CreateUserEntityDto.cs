@@ -2,4 +2,4 @@
 
 namespace OggettoCase.DataAccess.Dtos;
 
-public record CreateUserEntityDto(string Email, string Name, string Surname, string PictureUrl, UserAuthenticationTypeEnum AuthenticationType, string AccessToken );
+public record CreateUserEntityDto(string ExternalId, string Email, string Name, string Surname, string PictureUrl, UserAuthenticationTypeEnum AuthenticationType, string AccessToken );

@@ -41,6 +41,16 @@ public class BaseProblemDetailsFactory : ProblemDetailsFactory
                         Instance = instance,
                     }; 
                     break;
+                case { } unhandledException :
+                    statusCode = 500;
+                    problemDetails = new ProblemDetails
+                    {
+                        Status = statusCode,
+                        Title = unhandledException.Message,
+                        Detail = unhandledException.InnerException?.Message,
+                        Instance = instance,
+                    };
+                    break;;
             }
             httpContext.Response.StatusCode = statusCode.Value;
         }
@@ -59,8 +69,6 @@ public class BaseProblemDetailsFactory : ProblemDetailsFactory
 
         return problemDetails;
     }
-
-    /// <inheritdoc />
     public override ValidationProblemDetails CreateValidationProblemDetails(HttpContext httpContext, ModelStateDictionary modelStateDictionary, int? statusCode = null, string? title = null, string? type = null, string? detail = null, string? instance = null)
     {
         if (modelStateDictionary == null)
@@ -80,7 +88,6 @@ public class BaseProblemDetailsFactory : ProblemDetailsFactory
 
         if (title != null)
         {
-            // For validation problem details, don't overwrite the default title with null.
             problemDetails.Title = title;
         }
         return problemDetails;

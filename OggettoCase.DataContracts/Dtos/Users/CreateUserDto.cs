@@ -1,5 +1,6 @@
-﻿using OggettoCase.DataContracts.Dtos.Users.Enums;
+﻿using System.ComponentModel.DataAnnotations;
+using OggettoCase.DataContracts.Dtos.Users.Enums;
 
 namespace OggettoCase.DataContracts.Dtos.Users;
 
-public record CreateUserDto(string Email, string Name, string Surname, string PictureUrl, UserAuthenticationTypeEnumDto AuthenticationType, string AccessToken );
+public record CreateUserDto([Required]string ExternalId, [Required] string Email, [Required]string Name, [Required]string Surname, [Required]string PictureUrl, UserAuthenticationTypeEnumDto AuthenticationType, string AccessToken );

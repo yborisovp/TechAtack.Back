@@ -19,8 +19,11 @@ public class UserDto
     [EmailAddress]
     [MaxLength(150)]
     public required string Email { get; set; }
+    
+    public required string PhotoUrl { get; set; }
 
     public UserRoleEnumDto Role { get; set; }
 
     public UserAuthenticationTypeEnumDto AuthenticationType { get; set; }
+    public bool IsApproved { get; set; }
 }

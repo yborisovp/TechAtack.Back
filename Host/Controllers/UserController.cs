@@ -1,7 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OggettoCase.DataContracts.Dtos.Users;
+using OggettoCase.DataContracts.Filters;
 using OggettoCase.DataContracts.Interfaces;
 using OggettoCase.Interfaces;
+using OggettoCase.Mappers.Filters;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace OggettoCase.Controllers;
@@ -10,6 +13,7 @@ namespace OggettoCase.Controllers;
 /// API to control templates
 /// </summary>
 [ApiController]
+[Authorize(Policy = "ExcludeRoles")]
 [Route("[controller]")]
 [Produces("application/json")]
 [Consumes("application/json")]
@@ -40,6 +44,18 @@ public class UserController : ControllerBase, IUserController
         var UserDtos = await _userService.GetAllAsync(ct);
         _logger.LogDebug("Successfully received list of {UserDto}s", nameof(UserDto));
         return Ok(UserDtos);
+    }
+    
+    [HttpGet("filter")]
+    [SwaggerOperation($"Get all {nameof(UserDto)}s by filter")]
+    [SwaggerResponse(200, type: typeof(IEnumerable<UserDto>), description: $"List of {nameof(UserDto)}s")]
+    [SwaggerResponse(500, type: typeof(ProblemDetails), description: "Server side error")]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetByFilterAsync(UserFilter userFilter, CancellationToken ct = default)
+    {
+        _logger.LogDebug("Get all {name of}s by filter", nameof(UserDto));
+        var userDtos = await _userService.GetByFilterAsync(userFilter, ct);
+        _logger.LogDebug("Successfully received list of {UserDto}s", nameof(UserDto));
+        return Ok(userDtos);
     }
 
     /// <inheritdoc />
@@ -74,6 +90,7 @@ public class UserController : ControllerBase, IUserController
     }
 
     /// <inheritdoc />
+    [Authorize(Roles = "admin")]
     [HttpDelete("{id:Guid}")]
     [SwaggerOperation($"Delete {nameof(UserDto)}")]
     [SwaggerResponse(200, type: typeof(UserDto), description: $"{nameof(UserDto)} successfully deleted")]
@@ -87,5 +104,25 @@ public class UserController : ControllerBase, IUserController
         _logger.LogDebug("Successfully delete {UserDto} by id: '{id}'", nameof(UserDto), id);
 
         return Ok(deletedTemplateId);
+    }
+
+    [Authorize(Roles = "admin")]
+    [HttpGet("approve")]
+    public async Task ChangeUserApprovalState(long userId, bool isApproved, CancellationToken ct = default)
+    {
+        var user = await _userService.GetByIdAsync(userId, ct);
+        if (user is null)
+        {
+            throw new KeyNotFoundException("User not found");
+        }
+
+        if (isApproved)
+        {
+            await _userService.ApproveUserAccountAsync(userId, ct);
+        }
+        else
+        {
+            await DeleteByIdAsync(userId, ct);
+        }
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OggettoCase.DataAccess.Context;
 using OggettoCase.DataAccess.Dtos;
+using OggettoCase.DataAccess.Filters;
 using OggettoCase.DataAccess.Interfaces;
 using OggettoCase.DataAccess.Models.Users;
 using OggettoCase.DataAccess.Models.Users.Enums;
@@ -51,6 +52,9 @@ public class UserRepository : BaseRepository, IUserRepository
         _logger.LogDebug("Update {name of} with Id: '{id}' in database", nameof(User), entityToUpdate.Id);
 
         await using var context = ContextFactory.CreateDbContext();
+        var existingUser = await context.Users.AsNoTracking().Where(u => u.Id == entityToUpdate.Id).SingleAsync(ct);
+        entityToUpdate.PhotoUrl = existingUser.PhotoUrl;
+        
         context.Users.Update(entityToUpdate);
         await context.SaveChangesAsync(ct);
 
@@ -103,18 +107,62 @@ public class UserRepository : BaseRepository, IUserRepository
         var user = new User
         {
             Id = 0,
+            ExternalId = createUserEntityParams.ExternalId,
             Name = createUserEntityParams.Name,
             Surname = createUserEntityParams.Surname,
-            Role = UserRoleEnum.Admin,
+            Role = UserRoleEnum.Normal,
             Email = createUserEntityParams.Email,
             AuthenticationType = createUserEntityParams.AuthenticationType,
             AccessToken = createUserEntityParams.AccessToken,
-            IsApproved = false
+            IsApproved = false,
+            PhotoUrl = createUserEntityParams.PictureUrl
         };
 
         var userEntity = await context.Users.AddAsync(user, ct);
         await context.SaveChangesAsync(ct);
         return userEntity.Entity;
+    }
+
+    public async Task ApproveUserAccountAsync(long userId, CancellationToken ct)
+    {
+        await using var context = ContextFactory.CreateDbContext();
+        var user = await context.Users.Where(x => x.Id == userId).SingleAsync(ct);
+        user.IsApproved = true;
+        context.Users.Update(user);
+        await context.SaveChangesAsync(ct);
+    }
+
+    public async Task<IEnumerable<User>> GetByFilterAsync(UserFilterInternal filter, CancellationToken ct)
+    {
+        await using var context = ContextFactory.CreateDbContext();
+        var query = context.Users.AsQueryable();
+        if (filter.Name != null)
+        {
+            query = query.Where(x => x.Name.Contains(filter.Name));
+        }
+        
+        if (filter.Surname != null)
+        {
+            query = query.Where(x => x.Surname.Contains(filter.Surname));
+        }
+        
+        if (filter.Email != null)
+        {
+            query = query.Where(x => x.Email.Contains(filter.Email));
+        }
+        
+        if (filter.ApprovedState != null)
+        {
+            query = query.Where(x => x.IsApproved == filter.ApprovedState);
+        }
+        
+        if (filter.Role != null)
+        {
+            query = query.Where(x => x.Role == filter.Role);
+        }
+
+        var result = await query.ToListAsync(ct);
+        return result;
     }
 
     private static IQueryable<User> GetFullQuery(IQueryable<User> form)

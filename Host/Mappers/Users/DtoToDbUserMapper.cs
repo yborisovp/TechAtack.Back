@@ -1,43 +1,25 @@
 using OggettoCase.DataAccess.Dtos;
+using OggettoCase.DataAccess.Models.Comments;
 using OggettoCase.DataAccess.Models.Users;
+using OggettoCase.DataContracts.Dtos.Comments;
 using OggettoCase.DataContracts.Dtos.Users;
-using OggettoCase.Mappers.Users;
 
-namespace OggettoCase.Mappers.Templates;
+namespace OggettoCase.Mappers.Users;
 
 /// <summary>
 /// Templates Mapper fromm db entity model to dto
 /// </summary>
 public static class DtoToDbUserMapper
 {
-    /// <summary>
-    /// Convert database template to dto
-    /// </summary>
-    /// <param name="updatedUserDto">Updated entity</param>
-    /// <param name="templateId">id of template</param>
-    /// <returns></returns>
-    public static User ToEntity(this UpdateUserDto updatedUserDto, long userId)
+    public static Comment ToEntity(this CommentDto commentDto)
     {
-        return new User
+        return new Comment
         {
-            Id = userId,
-            Name = updatedUserDto.Name,
-            Surname = updatedUserDto.Surname,
-            Email = updatedUserDto.Email,
-            Role = updatedUserDto.Role.ToEntity(),
-            AuthenticationType = updatedUserDto.AuthenticationType.ToEntity()
+            Id = commentDto.Id,
+            Text = commentDto.Text,
+            CalendarId = commentDto.CalendarId,
+            UserId = commentDto.User.Id
         };
     }
 
-    public static CreateUserEntityDto ToEntity(this CreateUserDto createUserDto)
-    {
-        return new CreateUserEntityDto(
-            createUserDto.Email,
-            createUserDto.Name,
-            createUserDto.Surname,
-            createUserDto.PictureUrl,
-            createUserDto.AuthenticationType.ToEntity(),
-            createUserDto.AccessToken
-        );
-    }
 }

@@ -17,7 +17,9 @@ public static class DbToDtoUserMapper
             Surname = user.Surname,
             Email = user.Email,
             Role = user.Role.ToDto(),
-            AuthenticationType = user.AuthenticationType.ToDto()
+            AuthenticationType = user.AuthenticationType.ToDto(),
+            PhotoUrl = user.PhotoUrl,
+            IsApproved = user.IsApproved,
         };
     }
 }

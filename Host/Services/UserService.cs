@@ -1,7 +1,12 @@
 using OggettoCase.DataAccess.Interfaces;
+using OggettoCase.DataAccess.Models.Users;
+using OggettoCase.DataContracts.Dtos.Authorization;
 using OggettoCase.DataContracts.Dtos.Users;
+using OggettoCase.DataContracts.Filters;
 using OggettoCase.DataContracts.Interfaces;
-using OggettoCase.Mappers.Templates;
+using OggettoCase.Interfaces;
+using OggettoCase.Mappers.Comments;
+using OggettoCase.Mappers.Filters;
 using OggettoCase.Mappers.Users;
 
 namespace OggettoCase.Services;
@@ -13,16 +18,18 @@ public class UserService : IUserService
 {
     private readonly IUserRepository _userRepository;
     private readonly ILogger<UserService> _logger;
-
+    private readonly ITokenGenerator _tokenGenerator;
+    
     /// <summary>
     /// Constructor of an service
     /// </summary>
     /// <param name="userRepository"></param>
     /// <param name="logger"></param>
-    public UserService(IUserRepository userRepository, ILogger<UserService> logger)
+    public UserService(IUserRepository userRepository, ILogger<UserService> logger, ITokenGenerator tokenGenerator)
     {
         _userRepository = userRepository;
         _logger = logger;
+        _tokenGenerator = tokenGenerator;
     }
 
     /// <inheritdoc />
@@ -112,10 +119,44 @@ public class UserService : IUserService
         return user.ToDto();
     }
 
-    public async Task<UserDto> CreateUserAsync(CreateUserDto createUserParams, CancellationToken ct)
+    public async Task<UserDto> CreateUserAsync(CreateUserDto createUserParams, string externalAccessToken = "", CancellationToken ct = default)
     {
         var user = await _userRepository.CreateUserAsync(createUserParams.ToEntity(), ct);
-
+        
         return user.ToDto();
+    }
+
+    public async Task<AuthorizationInfoDto> AuthorizeUserAsync(long userId, string externalAccessToken = "", CancellationToken ct = default)
+    {
+        var user =await _userRepository.GetByIdAsync(userId, ct);
+        var jwt = _tokenGenerator.GenerateJwt(user, externalAccessToken);
+        var refreshToken = _tokenGenerator.GenerateRefreshToken();
+        await AssignRefreshToken(refreshToken, user, ct);
+        
+       return new ()
+        {
+            AccessToken = jwt,
+            RefreshToken = refreshToken.Token
+        };
+    }
+
+    public async Task ApproveUserAccountAsync(long userId, CancellationToken ct = default)
+    {
+        _logger.LogDebug("Approve {name of} with id: '{id}'", nameof(UserDto), userId);
+         await _userRepository.ApproveUserAccountAsync(userId, ct);
+    }
+
+    public async Task<IEnumerable<UserDto>> GetByFilterAsync(UserFilter userFilter, CancellationToken ct = default)
+    {
+        var users = await _userRepository.GetByFilterAsync(userFilter.ToInternalFilter(), ct);
+        return users.Select(x => x.ToDto()); 
+    }
+
+    private async Task AssignRefreshToken(RefreshToken refreshToken, User user, CancellationToken ct = default)
+    {
+        user.RefreshToken = refreshToken.Token;
+        user.RefreshTokenExpirationDate = refreshToken.TokenExpirationDate;
+
+        await _userRepository.UpdateAsync(user, ct);
     }
 }
