@@ -28,8 +28,8 @@ public class DatabaseContext : DbContext
         modelBuilder.BuildIndexesFromAnnotations();
 
         modelBuilder.Entity<Calendar>().HasOne(x => x.Owner).WithMany(x => x.CalendarEvents)
-            .HasForeignKey(x => x.OwnerId).HasConstraintName("owner_id");
-
+            .HasForeignKey(x => x.OwnerId).HasConstraintName("owner_id").OnDelete(DeleteBehavior.ClientCascade);
+           
         modelBuilder.Entity<Comment>().HasOne(x => x.Calendar).WithMany(x => x.Comments)
             .HasForeignKey(x => x.CalendarId).HasConstraintName("calendar_event_id");
     }

@@ -9,7 +9,7 @@ Add-Migration Initial -Context DataBaseContext
 ```
 Или
 ```shell
-dotnet ef migrations add InitialCreate --context DatabaseContext --output-dir Migrations/  --project ../OggettoCase.DataAccess --startup-project ../Host/ 
+dotnet ef migrations add AddOnDeleteCascade InitialCreate --context DatabaseContext --output-dir Migrations/  --project ../OggettoCase.DataAccess --startup-project ../Host/ 
 ```
 
 5. Создать SQL-скрипт с помощью команды:
