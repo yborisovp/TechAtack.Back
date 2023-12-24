@@ -8,7 +8,7 @@ public class UpdateCalendarDto
     
     public required string Title { get; set; }
     
-    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public string? Description { get; set; }
     

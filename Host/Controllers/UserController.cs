@@ -1,6 +1,8 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OggettoCase.DataContracts.Dtos.Users;
+using OggettoCase.DataContracts.Dtos.Users.Enums;
 using OggettoCase.DataContracts.Filters;
 using OggettoCase.DataContracts.Interfaces;
 using OggettoCase.Interfaces;
@@ -108,7 +110,7 @@ public class UserController : ControllerBase, IUserController
 
     [Authorize(Roles = "admin")]
     [HttpGet("approve")]
-    public async Task ChangeUserApprovalState(long userId, bool isApproved, CancellationToken ct = default)
+    public async Task ChangeUserApprovalState(long userId, bool isApproved, UserRoleEnumDto? approvedRole, CancellationToken ct = default)
     {
         var user = await _userService.GetByIdAsync(userId, ct);
         if (user is null)
@@ -118,7 +120,11 @@ public class UserController : ControllerBase, IUserController
 
         if (isApproved)
         {
-            await _userService.ApproveUserAccountAsync(userId, ct);
+            if (approvedRole is null)
+            {
+                throw new ValidationException("User role cannot be empty id account approved.");
+            }
+            await _userService.ApproveUserAccountAsync(userId, approvedRole.Value, ct);
         }
         else
         {

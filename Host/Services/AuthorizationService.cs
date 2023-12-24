@@ -61,7 +61,7 @@ public class AuthorizationService: IAuthorizationService
             throw new KeyNotFoundException("Invalid refresh token has been provided.");
         }
 
-        if (user.RefreshTokenExpirationDate < DateTimeOffset.Now)
+        if (user.RefreshTokenExpirationDate < DateTime.Now)
         {
             throw new InvalidDataException("Refresh token is expired.");
         }

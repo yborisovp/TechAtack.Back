@@ -82,6 +82,7 @@ public class GoogleService: IGoogleService
     {
         var claim = _httpContextAccessor.HttpContext?.User.FindFirstValue("oauthToken") ?? throw new NotImplementedException();
         const string route = "https://www.googleapis.com/calendar/v3/calendars";
+        
         var json = JsonConvert.SerializeObject(new
         {
             summary = createCalendarEntityDto.Title,
@@ -93,7 +94,8 @@ public class GoogleService: IGoogleService
                 {
                     "hangoutsMeet"
                 }
-            }
+            },
+            
         });
         var request = new HttpRequestMessage
         {
@@ -112,20 +114,33 @@ public class GoogleService: IGoogleService
         return calendarData.id;
     }
 
-    public async Task<string> GetLinkToGoogleEvent(string calendarId, DateTimeOffset start, DateTimeOffset end, CancellationToken ct = default)
+    public async Task<string> GetLinkToGoogleEvent(string calendarId, List<User>? users, CreateCalendarEventDto createCalendarEvent, CancellationToken ct = default)
     {
         var claim = _httpContextAccessor.HttpContext?.User.FindFirstValue("oauthToken") ?? throw new NotImplementedException();
-        var route = $"https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events";
+        var route = $"https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events?conferenceDataVersion=1";
         var pool = "abcdefghijklmnopqrstuvwxyz0123456789";
+        var meetingUsers = new List<object>();
+        if (users != null)
+            foreach (var user in users)
+            {
+                meetingUsers.Add(new
+                {
+                    email = user.Email,
+                    displayName = user.Name + user.Surname
+                });
+            }
+
         var json = JsonConvert.SerializeObject(new
         {
+            description = createCalendarEvent.Description,
+            summary = createCalendarEvent.Title,
             start = new
             {
-                dateTime = start.ToString("yyyy-mm-ddTHH:mm:ss.fffZ")
+                dateTime = createCalendarEvent.StartedAt.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
             },
             end = new
             {
-                dateTime = start.ToString("yyyy-mm-ddTHH:mm:ss.fffZ")
+                dateTime = createCalendarEvent.EndedAt.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
             },
             conferenceData = new
             {
@@ -133,7 +148,8 @@ public class GoogleService: IGoogleService
                     requestId = string.Join("", Enumerable.Range(0, 9)
                         .Select(x => pool[new Random().Next(0, pool.Length)]))
                 }
-            }
+            },
+            attendees = meetingUsers
         });
         var request = new HttpRequestMessage
         {
@@ -148,7 +164,10 @@ public class GoogleService: IGoogleService
         {
             throw new GoogleAuthorizationException("Something went wrong. Possible because of auth token.");
         }
-        var calendarData = await JsonSerializer.DeserializeAsync<GoogleCalendarEvent>(await response.Content.ReadAsStreamAsync(ct), cancellationToken: ct) ?? throw new Exception("Parsing response from calendar went wrong/"); 
+
+        var content = await response.Content.ReadAsStreamAsync(ct);
+        var calendarData = await JsonSerializer.DeserializeAsync<GoogleCalendarEvent>(content, cancellationToken: ct) ?? throw new Exception("Parsing response from calendar went wrong/"); 
+        
         return calendarData.conferenceData.entryPoints.First().uri;
     }
 

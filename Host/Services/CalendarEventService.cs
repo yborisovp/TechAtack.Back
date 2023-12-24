@@ -1,4 +1,5 @@
 using OggettoCase.DataAccess.Interfaces;
+using OggettoCase.DataAccess.Models.Users;
 using OggettoCase.DataContracts.Dtos.Calendars;
 using OggettoCase.DataContracts.Dtos.Users;
 using OggettoCase.DataContracts.Filters;
@@ -18,17 +19,20 @@ public class CalendarEventService : ICalendarEventService
     private readonly ICalendarRepository _calendarRepository;
     private readonly IGoogleService _googleService;
     private readonly ILogger<CalendarEventService> _logger;
+    
+    private readonly IUserRepository _userRepository;
 
     /// <summary>
     /// Constructor of an service
     /// </summary>
     /// <param name="userRepository"></param>
     /// <param name="logger"></param>
-    public CalendarEventService(ICalendarRepository userRepository, ILogger<CalendarEventService> logger, IGoogleService googleService)
+    public CalendarEventService(ICalendarRepository userRepository, ILogger<CalendarEventService> logger, IGoogleService googleService, IUserRepository userRepository1)
     {
         _calendarRepository = userRepository;
         _logger = logger;
         _googleService = googleService;
+        _userRepository = userRepository1;
     }
 
     /// <inheritdoc />
@@ -128,8 +132,12 @@ public class CalendarEventService : ICalendarEventService
     public async Task<CalendarDto> CreateCalendarEventAsync(CreateCalendarEventDto createCalendarEntityDto, CancellationToken ct = default)
     {
         //var calendId = await _googleService.CreateEventInGoogleCalendar(createCalendarEntityDto, ct);
-        createCalendarEntityDto.LinkToMeeting = await _googleService.GetLinkToGoogleEvent("primary", createCalendarEntityDto.StartedAt,
-            createCalendarEntityDto.EndedAt, ct);
+        List<User> users = null;
+        if (createCalendarEntityDto.UserIds != null)
+        {
+            users = await _userRepository.GetSeveralByIdAsync(createCalendarEntityDto.UserIds, ct);
+        }
+        createCalendarEntityDto.LinkToMeeting = await _googleService.GetLinkToGoogleEvent("primary",  users, createCalendarEntityDto, ct);
         
         var calendarEvent = await _calendarRepository.CreateCalendarAsync(createCalendarEntityDto.ToEntity(), ct);
         return calendarEvent.ToDto();

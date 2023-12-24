@@ -123,11 +123,12 @@ public class UserRepository : BaseRepository, IUserRepository
         return userEntity.Entity;
     }
 
-    public async Task ApproveUserAccountAsync(long userId, CancellationToken ct)
+    public async Task ApproveUserAccountAsync(long userId, UserRoleEnum approvedRole, CancellationToken ct)
     {
         await using var context = ContextFactory.CreateDbContext();
         var user = await context.Users.Where(x => x.Id == userId).SingleAsync(ct);
         user.IsApproved = true;
+        user.Role = approvedRole;
         context.Users.Update(user);
         await context.SaveChangesAsync(ct);
     }
@@ -163,6 +164,17 @@ public class UserRepository : BaseRepository, IUserRepository
 
         var result = await query.ToListAsync(ct);
         return result;
+    }
+
+    public async Task<List<User>> GetSeveralByIdAsync(IList<long> userIds, CancellationToken ct = default)
+    {
+        _logger.LogDebug("Get all {name of}s", nameof(User));
+        await using var context = ContextFactory.CreateDbContext();
+
+        var templates = await GetFullQuery(context.Users).Where(u => userIds.Contains(u.Id))
+            .ToListAsync(ct);
+
+        return templates;
     }
 
     private static IQueryable<User> GetFullQuery(IQueryable<User> form)

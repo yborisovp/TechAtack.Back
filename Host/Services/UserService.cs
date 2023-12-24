@@ -2,6 +2,7 @@ using OggettoCase.DataAccess.Interfaces;
 using OggettoCase.DataAccess.Models.Users;
 using OggettoCase.DataContracts.Dtos.Authorization;
 using OggettoCase.DataContracts.Dtos.Users;
+using OggettoCase.DataContracts.Dtos.Users.Enums;
 using OggettoCase.DataContracts.Filters;
 using OggettoCase.DataContracts.Interfaces;
 using OggettoCase.Interfaces;
@@ -140,10 +141,10 @@ public class UserService : IUserService
         };
     }
 
-    public async Task ApproveUserAccountAsync(long userId, CancellationToken ct = default)
+    public async Task ApproveUserAccountAsync(long userId, UserRoleEnumDto approvedRole, CancellationToken ct = default)
     {
         _logger.LogDebug("Approve {name of} with id: '{id}'", nameof(UserDto), userId);
-         await _userRepository.ApproveUserAccountAsync(userId, ct);
+         await _userRepository.ApproveUserAccountAsync(userId, approvedRole.ToEntity(), ct);
     }
 
     public async Task<IEnumerable<UserDto>> GetByFilterAsync(UserFilter userFilter, CancellationToken ct = default)

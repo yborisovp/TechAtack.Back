@@ -7,6 +7,10 @@
 
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\OggettoCase.DataAccess\OggettoCase.DataAccess.csproj" />
+    </ItemGroup>
+
 
 
 

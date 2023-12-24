@@ -17,13 +17,13 @@ public class Calendar
     public string? Description { get; set; }
     
     [Column("created_at")]
-    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     [Column("started_at")]
-    public DateTimeOffset StartedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTime StartedAt { get; set; } = DateTime.UtcNow;
     
     [Column("ended_at")]
-    public DateTimeOffset EndedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTime EndedAt { get; set; } = DateTime.UtcNow;
     
     [ForeignKey(nameof(Owner))]
     [Column("owner_id")]

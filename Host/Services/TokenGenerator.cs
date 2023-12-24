@@ -99,7 +99,7 @@ public class TokenGenerator: ITokenGenerator
         return new RefreshToken
         {
             Token = Convert.ToBase64String(randomNumber),
-            TokenExpirationDate = DateTimeOffset.UtcNow.AddHours(_jwtOptions.RefreshTokenExpirationTimeInHours)
+            TokenExpirationDate = DateTime.UtcNow.AddHours(_jwtOptions.RefreshTokenExpirationTimeInHours)
         };
     }
 }

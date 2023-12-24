@@ -46,5 +46,5 @@ public class User
     public string RefreshToken { get; set; } = string.Empty;
     
     [Column("refresh_token_expiration_date")]
-    public DateTimeOffset RefreshTokenExpirationDate { get; set; } = DateTimeOffset.MinValue;
+    public DateTime RefreshTokenExpirationDate { get; set; } = DateTime.MinValue;
 }

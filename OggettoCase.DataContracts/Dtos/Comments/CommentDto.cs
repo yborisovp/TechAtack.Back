@@ -10,7 +10,7 @@ public class CommentDto
     [MaxLength(355)]
     public required string Text { get; set; }
 
-    public DateTimeOffset CreatedAt { get; set; } = DateTimeOffset.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     
     public required Guid CalendarId { get; set; }
     
