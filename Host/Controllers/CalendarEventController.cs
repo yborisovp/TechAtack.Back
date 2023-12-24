@@ -11,23 +11,34 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace OggettoCase.Controllers;
 
+/// <summary>
+/// Api to control calendar events
+/// </summary>
 [ApiController]
-[Route("[controller]")]
+[Route("Calendar")]
 [Produces("application/json")]
 [Consumes("application/json")]
-public class CalendarController: ICalendarController
+public class CalendarEventController: ICalendarController
 {
     private readonly ICalendarEventService _calendarEventService;
     private readonly ILogger<UserController> _logger;
     
-    public CalendarController(ICalendarEventService calendarEventService, ILogger<UserController> logger)
+    /// <summary>
+    /// Constructor of CalendarEventController
+    /// </summary>
+    /// <param name="calendarEventService"></param>
+    /// <param name="logger"></param>
+    public CalendarEventController(ICalendarEventService calendarEventService, ILogger<UserController> logger)
     {
         _calendarEventService = calendarEventService;
         _logger = logger;
     }
 
-    [HttpGet("filter")]
-    public async Task<IEnumerable<CalendarDto>> GetFilteredAsync([FromQuery] CalendarFilter calendarFilter, CancellationToken ct = default)
+    [HttpPost("filter")]
+    [SwaggerOperation($"Get all {nameof(CalendarDto)}s")]
+    [SwaggerResponse(200, type: typeof(IEnumerable<CalendarDto>), description: $"List of filtered {nameof(CalendarDto)}s")]
+    [SwaggerResponse(500, type: typeof(ProblemDetails), description: "Server side error")]
+    public async Task<IEnumerable<CalendarDto>> GetFilteredAsync([FromBody] CalendarFilter calendarFilter, CancellationToken ct = default)
     {
         var events = await _calendarEventService.GetFilteredEventsAsync(calendarFilter, ct);
         return events;
@@ -68,10 +79,10 @@ public class CalendarController: ICalendarController
     public async Task<ActionResult<CalendarDto>> UpdateByIdAsync(Guid id, [FromBody] UpdateCalendarDto dtoToUpdate, CancellationToken ct = default)
     {
         _logger.LogDebug("Update {name of} with id: '{id}''", nameof(CalendarDto), id);
-        var updatedTemplate = await _calendarEventService.UpdateByIdAsync(id, dtoToUpdate, ct);
+        var updatedCalendarEvent = await _calendarEventService.UpdateByIdAsync(id, dtoToUpdate, ct);
         _logger.LogDebug("Successfully update {CalendarDto} by id: '{id}'", nameof(CalendarDto), id);
 
-        return updatedTemplate;
+        return updatedCalendarEvent;
     }
     /// <inheritdoc />
     [HttpDelete("{id:Guid}")]
@@ -84,10 +95,10 @@ public class CalendarController: ICalendarController
     public async Task<ActionResult<Guid>> DeleteByIdAsync(Guid id, CancellationToken ct = default)
     {
         _logger.LogDebug("Delete {name of} with id: '{id}'", nameof(CalendarDto), id);
-        var deletedTemplateId = await _calendarEventService.DeleteByIdAsync(id, ct);
+        var deletedCalendarEvent = await _calendarEventService.DeleteByIdAsync(id, ct);
         _logger.LogDebug("Successfully delete {CalendarDto} by id: '{id}'", nameof(CalendarDto), id);
 
-        return deletedTemplateId;
+        return deletedCalendarEvent;
     }
 
     /// <inheritdoc />
@@ -101,10 +112,10 @@ public class CalendarController: ICalendarController
     public async Task<CalendarDto> UpdateSubscribedUsers(Guid eventId, [FromBody] IEnumerable<long> userIds, CancellationToken ct = default)
     {
         _logger.LogDebug("Update subscribers of calendar event with id: '{id}''", eventId);
-        var updatedTemplate = await _calendarEventService.UpdateSubscribedUsersAsync(eventId, userIds, ct);
+        var updatedCalendarEvent = await _calendarEventService.UpdateSubscribedUsersAsync(eventId, userIds, ct);
         _logger.LogDebug("Successfully subscribers of calendar event with id: '{id}'", nameof(CalendarDto), eventId);
 
-        return updatedTemplate;
+        return updatedCalendarEvent;
     }
 
     [Authorize(Roles = "admin,specialist")]

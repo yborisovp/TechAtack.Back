@@ -6,11 +6,13 @@ public class UpdateCalendarDto
 {
     public Guid Id { get; set; }
     
-    public required string Title { get; set; }
+    public required string? Title { get; set; }
     
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? StartedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? EndedAt { get; set; } = DateTime.UtcNow;
 
     public string? Description { get; set; }
     
-    public UserDto Owner { get; set; }
+    public List<string>? AdditionalLinks { get; set; }
+    public List<string>? EventDetails { get; set; }
 }

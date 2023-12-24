@@ -1,3 +1,4 @@
+using Microsoft.IdentityModel.Tokens;
 using OggettoCase.DataAccess.Interfaces;
 using OggettoCase.DataAccess.Models.Users;
 using OggettoCase.DataContracts.Dtos.Calendars;
@@ -40,10 +41,10 @@ public class CalendarEventService : ICalendarEventService
     {
         _logger.LogDebug("Get all {name of}s", nameof(CalendarDto));
 
-        var users = await _calendarRepository.GetAllAsync(ct);
+        var calendar = await _calendarRepository.GetAllAsync(ct);
 
         _logger.LogDebug("Successfully received list of {name of}", nameof(CalendarDto));
-        return users.Select(DbToDtoCalendarMapper.ToDto).ToList();
+        return calendar.Select(DbToDtoCalendarMapper.ToDto).ToList();
     }
 
     /// <inheritdoc />
@@ -65,18 +66,19 @@ public class CalendarEventService : ICalendarEventService
     public async Task<CalendarDto> UpdateByIdAsync(Guid id, UpdateCalendarDto dtoToUpdate, CancellationToken ct = default)
     {
         _logger.LogDebug("Update {name of} with id: '{id}'", nameof(CalendarDto), id);
-        var user = await _calendarRepository.GetByIdAsync(id, ct);
+        var calendar = await _calendarRepository.GetByIdAsync(id, ct);
 
-        if (user is null)
+        if (calendar is null)
         {
             _logger.LogWarning("Impossible to confirm existence of {name of} with id: '{id}' while update", nameof(CalendarDto), id);
             throw new KeyNotFoundException($"{nameof(CalendarDto)} with id: '{id}' doesn't exist");
         }
 
-        var templateToUpdate = dtoToUpdate.ToEntity();
+        await _googleService.UpdateEventAsync(calendar.ExternalCalendarId, calendar.ExternalEventId, dtoToUpdate, ct);
+        var entityToUpdate = dtoToUpdate.ToEntity(calendar);
 
-        var updatedTemplate = await _calendarRepository.UpdateAsync(templateToUpdate, ct);
-        if (updatedTemplate is null)
+        var updated = await _calendarRepository.UpdateAsync(entityToUpdate, ct);
+        if (updated is null)
         {
             _logger.LogError("Cannot update {name of} with id: '{id}'", nameof(CalendarDto), id);
             throw new InvalidProgramException($"Cannot update {nameof(CalendarDto)} with id: '{id}'");
@@ -92,19 +94,29 @@ public class CalendarEventService : ICalendarEventService
     public async Task<Guid> DeleteByIdAsync(Guid id, CancellationToken ct = default)
     {
         _logger.LogDebug("Delete {name of} with id: '{id}'", nameof(CalendarDto), id);
-        var user = await _calendarRepository.GetByIdAsync(id, ct);
-        if (user is null)
+        var calendar = await _calendarRepository.GetByIdAsync(id, ct);
+        if (calendar is null)
         {
             _logger.LogWarning("Impossible to confirm existence of {name of} with id: '{id}' while deleting", nameof(CalendarDto), id);
             throw new KeyNotFoundException($"{nameof(CalendarDto)} with id: '{id}' cannot be deleted");
         }
 
-        var deletedId = await _calendarRepository.DeleteByIdAsync(user.Id, ct);
+        await _googleService.DeleteEventAsync(calendar.ExternalCalendarId, calendar.ExternalEventId, ct);
+        var deletedId = await _calendarRepository.DeleteByIdAsync(calendar.Id, ct);
 
         _logger.LogDebug("Successfully delete {name of} with id: '{id}'", nameof(CalendarDto), id);
         return deletedId;
     }
 
+    /// <summary>
+    /// Update list of user that subscribed to event
+    /// </summary>
+    /// <param name="eventId"></param>
+    /// <param name="userIds"></param>
+    /// <param name="ct"></param>
+    /// <returns></returns>
+    /// <exception cref="KeyNotFoundException"></exception>
+    /// <exception cref="InvalidProgramException"></exception>
     public async Task<CalendarDto> UpdateSubscribedUsersAsync(Guid eventId, IEnumerable<long> userIds, CancellationToken ct = default)
     {
         _logger.LogDebug("Update {name of} with id: '{id}'", nameof(CalendarDto), eventId);
@@ -132,20 +144,27 @@ public class CalendarEventService : ICalendarEventService
     public async Task<CalendarDto> CreateCalendarEventAsync(CreateCalendarEventDto createCalendarEntityDto, CancellationToken ct = default)
     {
         //var calendId = await _googleService.CreateEventInGoogleCalendar(createCalendarEntityDto, ct);
-        List<User> users = null;
+        List<User> calendar = null;
         if (createCalendarEntityDto.UserIds != null)
         {
-            users = await _userRepository.GetSeveralByIdAsync(createCalendarEntityDto.UserIds, ct);
+            calendar = await _userRepository.GetSeveralByIdAsync(createCalendarEntityDto.UserIds, ct);
         }
-        createCalendarEntityDto.LinkToMeeting = await _googleService.GetLinkToGoogleEvent("primary",  users, createCalendarEntityDto, ct);
-        
-        var calendarEvent = await _calendarRepository.CreateCalendarAsync(createCalendarEntityDto.ToEntity(), ct);
+
+        var calendarId = "primary";
+        var data = await _googleService.CreateGoogleEventAsync(calendarId,  calendar, createCalendarEntityDto, ct);
+        createCalendarEntityDto.LinkToMeeting = data.conferenceData.entryPoints.FirstOrDefault()?.uri ?? "";
+        var calendarEvent = await _calendarRepository.CreateCalendarAsync(createCalendarEntityDto.ToEntity(), calendarId, data.id, ct);
         return calendarEvent.ToDto();
     }
 
     public async Task<IEnumerable<CalendarDto>> GetFilteredEventsAsync(CalendarFilter calendarFilter, CancellationToken ct = default)
     {
         var result = await _calendarRepository.GetFilteredEventsAsync(calendarFilter.ToInternalFilter(), ct);
-        return result.Select(x => x.ToDto());
+        var enumerable = result.ToList();
+        if (!enumerable.Any())
+        {
+            return Array.Empty<CalendarDto>();
+        }
+        return enumerable.Select(x => x.ToDto());
     }
 }

@@ -114,10 +114,10 @@ public class GoogleService: IGoogleService
         return calendarData.id;
     }
 
-    public async Task<string> GetLinkToGoogleEvent(string calendarId, List<User>? users, CreateCalendarEventDto createCalendarEvent, CancellationToken ct = default)
+    public async Task<GoogleCalendarEvent> CreateGoogleEventAsync(string calendarId, List<User>? users, CreateCalendarEventDto createCalendarEvent, CancellationToken ct = default)
     {
         var claim = _httpContextAccessor.HttpContext?.User.FindFirstValue("oauthToken") ?? throw new NotImplementedException();
-        var route = $"https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events?conferenceDataVersion=1";
+        var route = $"https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events?conferenceDataVersion=1&sendUpdates=all";
         var pool = "abcdefghijklmnopqrstuvwxyz0123456789";
         var meetingUsers = new List<object>();
         if (users != null)
@@ -168,7 +168,87 @@ public class GoogleService: IGoogleService
         var content = await response.Content.ReadAsStreamAsync(ct);
         var calendarData = await JsonSerializer.DeserializeAsync<GoogleCalendarEvent>(content, cancellationToken: ct) ?? throw new Exception("Parsing response from calendar went wrong/"); 
         
-        return calendarData.conferenceData.entryPoints.First().uri;
+        return calendarData;
+    }
+
+    public async Task DeleteEventAsync(string calendarId, string eventId, CancellationToken ct)
+    {
+       var claim = _httpContextAccessor.HttpContext?.User.FindFirstValue("oauthToken") ?? throw new NotImplementedException();
+        var route = $"https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events/{eventId}?sendUpdates=all";
+        
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Delete,
+            RequestUri = new Uri(route)
+        };
+        var httpClient = _httpClientFactory.CreateClient();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", claim);
+        var response = await httpClient.SendAsync(request, ct);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new GoogleAuthorizationException("Something went wrong. Possible because of auth token.");
+        }
+
+    }
+
+    public async Task UpdateEventAsync(string externalCalendarId, string eEventId, UpdateCalendarDto dtoToUpdate,
+        CancellationToken ct)
+    {
+        var claim = _httpContextAccessor.HttpContext?.User.FindFirstValue("oauthToken") ?? throw new NotImplementedException();
+        var route = $"https://www.googleapis.com/calendar/v3/calendars/{externalCalendarId}/events/{externalCalendarId}?conferenceDataVersion=1&sendUpdates=all";
+        var pool = "abcdefghijklmnopqrstuvwxyz0123456789";
+        
+        var json = JsonConvert.SerializeObject(new
+        {
+            description = dtoToUpdate.Description,
+            summary = dtoToUpdate.Title,
+            start = new
+            {
+                dateTime = dtoToUpdate.StartedAt?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+            },
+            end = new
+            {
+                dateTime = dtoToUpdate.EndedAt?.ToString("yyyy-MM-ddTHH:mm:ss.fffZ")
+            }
+        });
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Patch,
+            RequestUri = new Uri(route),
+            Content = new StringContent(json, Encoding.UTF8, "application/json"),
+        };
+        var httpClient = _httpClientFactory.CreateClient();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", claim);
+        var response = await httpClient.SendAsync(request, ct);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new GoogleAuthorizationException("Something went wrong. Possible because of auth token.");
+        }
+        
+    }
+
+    public async Task<GoogleCalendarEvent> GetGoogleEventData(string calendarId, string xternalEventId, CancellationToken ct)
+    {
+        var claim = _httpContextAccessor.HttpContext?.User.FindFirstValue("oauthToken") ?? throw new NotImplementedException();
+        var route = $"https://www.googleapis.com/calendar/v3/calendars/{calendarId}/events/{xternalEventId}";
+        
+        var request = new HttpRequestMessage
+        {
+            Method = HttpMethod.Get,
+            RequestUri = new Uri(route),
+        };
+        var httpClient = _httpClientFactory.CreateClient();
+        httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", claim);
+        var response = await httpClient.SendAsync(request, ct);
+        if (!response.IsSuccessStatusCode)
+        {
+            throw new GoogleAuthorizationException("Something went wrong. " + response.ReasonPhrase);
+        }
+
+        var content = await response.Content.ReadAsStreamAsync(ct);
+        var calendarData = await JsonSerializer.DeserializeAsync<GoogleCalendarEvent>(content, cancellationToken: ct) ?? throw new Exception("Parsing response from calendar went wrong/"); 
+        
+        return calendarData;
     }
 
     /*public async Task<bool> AddUserToEventAsync(string calendarId, string eventId, User user)

@@ -73,6 +73,7 @@ public class TokenGenerator: ITokenGenerator
 
         var token = new JwtSecurityTokenHandler().WriteToken(jwt);
 
+        
         return token;
     }
 

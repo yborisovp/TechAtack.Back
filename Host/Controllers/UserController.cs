@@ -109,7 +109,7 @@ public class UserController : ControllerBase, IUserController
     }
 
     [Authorize(Roles = "admin")]
-    [HttpGet("approve")]
+    [HttpPost("approve")]
     public async Task ChangeUserApprovalState(long userId, bool isApproved, UserRoleEnumDto? approvedRole, CancellationToken ct = default)
     {
         var user = await _userService.GetByIdAsync(userId, ct);

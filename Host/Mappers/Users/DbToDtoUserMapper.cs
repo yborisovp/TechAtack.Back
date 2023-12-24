@@ -8,8 +8,12 @@ namespace OggettoCase.Mappers.Users;
 /// </summary>
 public static class DbToDtoUserMapper
 {
-    public static UserDto ToDto(this User user)
+    public static UserDto ToDto(this User? user)
     {
+        if (user == null)
+        {
+            return null;
+        }
         return new UserDto
         {
             Id = user.Id,
@@ -20,6 +24,7 @@ public static class DbToDtoUserMapper
             AuthenticationType = user.AuthenticationType.ToDto(),
             PhotoUrl = user.PhotoUrl,
             IsApproved = user.IsApproved,
+            Category = user.Category?.Description
         };
     }
 }

@@ -36,7 +36,7 @@ public class UserRepository : BaseRepository, IUserRepository
         _logger.LogDebug("Get {name of} by Id: '{templateId}' from database", nameof(User), id);
         await using var context = ContextFactory.CreateDbContext();
 
-        var template = await context.Users.Where(t => t.Id == id).FirstOrDefaultAsync(ct);
+        var template = await context.Users.Where(t => t.Id == id).SingleOrDefaultAsync(ct);
 
         if (template is null)
         {

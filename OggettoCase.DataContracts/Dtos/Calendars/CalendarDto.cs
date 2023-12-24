@@ -12,6 +12,9 @@ public class CalendarDto
     public required string Title { get; set; }
     
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    
+    public DateTime StartedAt { get; set; } = DateTime.UtcNow;
+    public DateTime EndedAt { get; set; } = DateTime.UtcNow;
 
     public string? Description { get; set; }
     
@@ -21,4 +24,5 @@ public class CalendarDto
     public List<CommentDto>? Comments { get; set; }
     public required string LinkToMeeting { get; set; } 
 
+    public List<string>? AdditionalLinks { get; set; }
 }

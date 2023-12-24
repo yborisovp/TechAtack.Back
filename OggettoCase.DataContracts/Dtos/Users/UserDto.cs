@@ -26,4 +26,5 @@ public class UserDto
 
     public UserAuthenticationTypeEnumDto AuthenticationType { get; set; }
     public bool IsApproved { get; set; }
+    public string? Category { get; set; }
 }

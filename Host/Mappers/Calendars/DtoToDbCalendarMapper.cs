@@ -18,13 +18,17 @@ public static class DtoToDbCalendarMapper
     /// <param name="updatedUserDto">Updated entity</param>
     /// <param name="templateId">id of template</param>
     /// <returns></returns>
-    public static Calendar ToEntity(this UpdateCalendarDto updateCalendarDto)
+    public static Calendar ToEntity(this UpdateCalendarDto updateCalendarDto, Calendar pastVersion)
     {
         return new Calendar
         {
             Id = updateCalendarDto.Id,
-            Title = updateCalendarDto.Title,
-            Description = updateCalendarDto.Description,
+            Title = updateCalendarDto.Title ?? pastVersion.Title,
+            Description = updateCalendarDto.Description ?? pastVersion.Description,
+            StartedAt = updateCalendarDto.StartedAt ?? pastVersion.StartedAt,
+            EndedAt = updateCalendarDto.EndedAt ?? pastVersion.EndedAt,
+            AdditionalLinks = updateCalendarDto.AdditionalLinks ?? pastVersion.AdditionalLinks,
+            EventDetails = updateCalendarDto.EventDetails ?? pastVersion.EventDetails,
         };
     }
 
@@ -38,7 +42,9 @@ public static class DtoToDbCalendarMapper
             StartedAt = createUserDto.StartedAt,
             EndedAt = createUserDto.EndedAt,
             UserIds = createUserDto.UserIds,
-            LinkToMeeting = createUserDto.LinkToMeeting
+            LinkToMeeting = createUserDto.LinkToMeeting,
+            AdditionalLinks = createUserDto.AdditionalLinks,
+            EventDetails = createUserDto.EventDetails
         };
     }
 }

@@ -104,7 +104,7 @@ public class CalendarRepository : BaseRepository, ICalendarRepository
         return entity;
     }
 
-    public async Task<Calendar> CreateCalendarAsync(CreateCalendarEntityDto createCalendarEntityParams, CancellationToken ct = default)
+    public async Task<Calendar> CreateCalendarAsync(CreateCalendarEntityDto createCalendarEntityParams, string calendarId, string eventId, CancellationToken ct = default)
     {
         _logger.LogDebug("Create {name of}.", nameof(Calendar));
         await using var context = ContextFactory.CreateDbContext();
@@ -124,7 +124,11 @@ public class CalendarRepository : BaseRepository, ICalendarRepository
             EndedAt = createCalendarEntityParams.EndedAt,
             OwnerId = createCalendarEntityParams.OwnerId,
             Users = users,
-            LinkToMeeting = createCalendarEntityParams.LinkToMeeting
+            LinkToMeeting = createCalendarEntityParams.LinkToMeeting,
+            ExternalCalendarId = calendarId,
+            ExternalEventId = eventId,
+            AdditionalLinks = createCalendarEntityParams.AdditionalLinks,
+            EventDetails = createCalendarEntityParams.EventDetails
         };
 
         var calendarEntity = await context.Calendars.AddAsync(calendar, ct);
@@ -135,30 +139,30 @@ public class CalendarRepository : BaseRepository, ICalendarRepository
     public async Task<IEnumerable<Calendar>> GetFilteredEventsAsync(CalendarFilterInternal calendarFilter, CancellationToken ct = default)
     {
         await using var context = ContextFactory.CreateDbContext();
-        var query = context.Calendars.AsQueryable();
+        var query = GetFullQuery(context.Calendars).AsQueryable();
         if (calendarFilter.Title is not null)
         {
-            query = query.Where(c => c.Title.Contains(calendarFilter.Title));
+            query = query.Where(c => c.Title.ToLower().Contains(calendarFilter.Title));
         }
 
         if (calendarFilter.OwnerName is not null)
         {
-            query = query.Where(c => c.Owner.Name.Contains(calendarFilter.OwnerName) || c.Owner.Surname.Contains(calendarFilter.OwnerName));
+            query = query.Where(c => c.Owner.Name.ToLower().Contains(calendarFilter.OwnerName) || c.Owner.Surname.ToLower().Contains(calendarFilter.OwnerName.ToLower()));
         }
         
         if (calendarFilter.StartDate is not null)
         {
-            query = query.Where(c => c.StartedAt > calendarFilter.StartDate);
+            query = query.Where(c => c.StartedAt >= calendarFilter.StartDate  );
         }
         
         if (calendarFilter.EndDate is not null)
         {
-            query = query.Where(c => c.EndedAt < calendarFilter.EndDate);
+            query = query.Where(c => c.StartedAt <= calendarFilter.EndDate);
         }
         
         if (calendarFilter.Category is not null)
         {
-            query = query.Where(c => c.Owner.Category != null && c.Owner.Category.Equals(calendarFilter.Category));
+            query = query.Where(c => c.Owner.Category != null && c.Owner.Category.Description.ToLower().Equals(calendarFilter.Category.ToLower()));
         }
         
         var result = await query.ToListAsync(ct);

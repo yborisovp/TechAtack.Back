@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using OggettoCase.DataAccess.Models.Calendars;
+using OggettoCase.DataAccess.Models.Categories;
 using OggettoCase.DataAccess.Models.Users.Enums;
 
 namespace OggettoCase.DataAccess.Models.Users;
@@ -34,7 +35,7 @@ public class User
     public bool IsApproved { get; set; } = false;
     
     
-    public string? Category { get; set; }
+    public Category? Category { get; set; }
     
     [Column("calendar_events")]
     public List<Calendar>? CalendarEvents { get; set; }

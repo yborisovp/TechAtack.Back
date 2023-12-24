@@ -9,5 +9,7 @@ public class CreateCalendarEntityDto
     public required DateTime EndedAt { get; set; }
     public IList<long>? UserIds { get; set; }
     
-    public required string LinkToMeeting { get; set; } 
+    public required string LinkToMeeting { get; set; }
+    public List<string>? AdditionalLinks { get; set; }
+    public List<string>? EventDetails { get; set; }
 }

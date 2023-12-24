@@ -11,6 +11,12 @@ public class Calendar
     [Key]
     public Guid Id { get; set; }
     
+    [Column("external_event_id")]
+    public string ExternalEventId { get; set; }
+    
+    [Column("external_calendar_id")]
+    public string ExternalCalendarId { get; set; }
+    
     [MaxLength(255)]
     public required string Title { get; set; }
     
@@ -35,5 +41,13 @@ public class Calendar
     
     public List<Comment>? Comments { get; set; }
 
+    [Column("link_to_meeting")]
     public string LinkToMeeting { get; set; } = string.Empty;
+    
+    [Column("additional_links")]
+    public List<string>? AdditionalLinks { get; set; }
+    
+    [Column("event_details")]
+    public List<string>? EventDetails { get; set; }
+    
 }

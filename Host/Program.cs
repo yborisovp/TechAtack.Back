@@ -79,7 +79,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddAuthorization(options => {
     options.AddPolicy("ExcludeRoles", policy => policy.AddRequirements(new CustomRoleRequirement()));
 });
-
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 builder.Services.AddScoped<IAuthorizationService, AuthorizationService>();
@@ -92,6 +92,9 @@ builder.Services.AddScoped<ICalendarRepository, CalendarRepository>();
 
 builder.Services.AddScoped<ICommentsService, CommentsService>();
 builder.Services.AddScoped<ICommentsRepository, CommentsRepository>();
+
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 builder.Services.AddTransient<IGoogleService, GoogleService>();
 
@@ -136,7 +139,7 @@ if (swaggerConfig is { IsEnabled: true })
         options.SwaggerDoc("v1", new OpenApiInfo
         {
             Version = "v1",
-            Title = $"Swagger of Template service",
+            Title = $"Swagger of Oggetto Case",
             Description = "Swagger of Template service build with .NET CORE 8.0"
         });
         

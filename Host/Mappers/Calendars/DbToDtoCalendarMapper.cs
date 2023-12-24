@@ -23,7 +23,9 @@ public static class DbToDtoCalendarMapper
             Owner = calendar.Owner.ToDto(),
             Users = calendar.Users?.Select(x => x.ToDto()).ToList(),
             Comments = calendar.Comments?.Select(x => x.ToDto()).ToList(),
-            LinkToMeeting = calendar.LinkToMeeting
+            LinkToMeeting = calendar.LinkToMeeting,
+            StartedAt = calendar.StartedAt,
+            EndedAt = calendar.EndedAt
         };
     }
 }

@@ -76,8 +76,8 @@
         public string iCalUID { get; set; }
         public int sequence { get; set; }
         public string hangoutLink { get; set; }
-        public ConferenceData conferenceData { get; set; }
-        public Reminders reminders { get; set; }
+        public ConferenceData? conferenceData { get; set; }
+        public Reminders? reminders { get; set; }
         public string eventType { get; set; }
     }
 

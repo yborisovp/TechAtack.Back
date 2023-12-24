@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OggettoCase.DataAccess.Models.Calendars;
+using OggettoCase.DataAccess.Models.Categories;
 using OggettoCase.DataAccess.Models.Comments;
 using OggettoCase.DataAccess.Models.Users;
 using Toolbelt.ComponentModel.DataAnnotations;
@@ -14,6 +15,7 @@ public class DatabaseContext : DbContext
     public DbSet<User> Users { get; set; } = null!;
     public DbSet<Comment> Comments { get; set; } = null!;
     public DbSet<Calendar> Calendars { get; set; } = null!;
+    public DbSet<Category> Categories { get; set; } = null!;
 
     public DatabaseContext(DbContextOptions options)
         : base(options)

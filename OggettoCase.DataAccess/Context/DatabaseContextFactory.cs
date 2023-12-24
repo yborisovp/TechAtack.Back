@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace OggettoCase.DataAccess.Context;
 
@@ -25,6 +26,7 @@ public class DatabaseContextFactory : IDatabaseContextFactory
             ));
         optionsBuilder.UseCamelCaseNamingConvention();
         optionsBuilder.EnableSensitiveDataLogging();
+        optionsBuilder.LogTo(s => System.Diagnostics.Debug.WriteLine(s));
         return new DatabaseContext(optionsBuilder.Options);
     }
     

@@ -9,4 +9,7 @@ public class CreateCalendarEventDto
     public required DateTime EndedAt { get; set; }
     public IList<long>? UserIds { get; set; }
     public string LinkToMeeting { get; set; } = string.Empty;
+    
+    public List<string>? AdditionalLinks { get; set; }
+    public List<string>? EventDetails { get; set; }
 }
