@@ -54,9 +54,8 @@ public class CalendarRepository : BaseRepository, ICalendarRepository
         await using var context = ContextFactory.CreateDbContext();
         var entry = context.Entry(entityToUpdate);
         entry.Property(x => x.CreatedAt).IsModified = false;
-        entry.Property(x => x.Users).IsModified = false;
+        
         entry.Property(x => x.OwnerId).IsModified = false;
-        entry.Property(x => x.Owner).IsModified = false;
         entry.Property(x => x.LinkToMeeting).IsModified = false;
         context.Calendars.Update(entityToUpdate);
         await context.SaveChangesAsync(ct);
@@ -164,7 +163,7 @@ public class CalendarRepository : BaseRepository, ICalendarRepository
         var query = GetFullQuery(context.Calendars).AsQueryable();
         if (calendarFilter.Title is not null)
         {
-            query = query.Where(c => c.Title.ToLower().Contains(calendarFilter.Title));
+            query = query.Union(context.Calendars.Where(c => c.Title.ToLower().Contains(calendarFilter.Title)));
         }
 
         if (calendarFilter.OwnerName is not null)

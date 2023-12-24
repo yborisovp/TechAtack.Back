@@ -191,11 +191,11 @@ public class GoogleService: IGoogleService
 
     }
 
-    public async Task UpdateEventAsync(string externalCalendarId, string eEventId, UpdateCalendarDto dtoToUpdate,
+    public async Task UpdateEventAsync(string externalCalendarId, string eventId, UpdateCalendarDto dtoToUpdate,
         CancellationToken ct)
     {
         var claim = _httpContextAccessor.HttpContext?.User.FindFirstValue("oauthToken") ?? throw new NotImplementedException();
-        var route = $"https://www.googleapis.com/calendar/v3/calendars/{externalCalendarId}/events/{externalCalendarId}?conferenceDataVersion=1&sendUpdates=all";
+        var route = $"https://www.googleapis.com/calendar/v3/calendars/{externalCalendarId}/events/{eventId}?conferenceDataVersion=1&sendUpdates=all";
         var pool = "abcdefghijklmnopqrstuvwxyz0123456789";
         
         var json = JsonConvert.SerializeObject(new

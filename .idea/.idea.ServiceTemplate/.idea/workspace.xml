@@ -7,21 +7,18 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0972fb76-1d26-42ef-b7e5-f5c899bc518b" name="Changes" comment="upd">
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.OggettoCase/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.OggettoCase/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.OggettoCase/.idea/encodings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.OggettoCase/.idea/indexLayout.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.OggettoCase/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.idea.ServiceTemplate/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OggettoCase.DataAccess/Migrations/20231224094458_InitialCreate.Designer.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OggettoCase.DataAccess/Migrations/20231224094458_InitialCreate.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OggettoCase.DataAccess/Migrations/DatabaseContextModelSnapshot.cs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OggettoCase.DataAccess/Migrations/SQL/InitialCreate.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/OggettoCase.DataContracts.DataAccess/Migrations/SQL/InitialCreate.sql" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/view.jpg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/OggettoCase.sln" beforeDir="false" afterPath="$PROJECT_DIR$/OggettoCase.sln" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+    <list default="true" id="0972fb76-1d26-42ef-b7e5-f5c899bc518b" name="Changes" comment="add gitignore">
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ServiceTemplate/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ServiceTemplate/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Host/Controllers/UserController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Host/Controllers/UserController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Host/Mappers/Calendars/DtoToDbCalendarMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Host/Mappers/Calendars/DtoToDbCalendarMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Host/Mappers/Users/DtoToDbUserMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Host/Mappers/Users/DtoToDbUserMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Host/Services/CalendarEventService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Host/Services/CalendarEventService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Host/Services/GoogleService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Host/Services/GoogleService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Host/Services/UserService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Host/Services/UserService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OggettoCase.DataAccess/Models/Users/User.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OggettoCase.DataAccess/Models/Users/User.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OggettoCase.DataAccess/Repositories/CalendarRepository.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OggettoCase.DataAccess/Repositories/CalendarRepository.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OggettoCase.DataContracts/Dtos/Calendars/UpdateCalendarDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OggettoCase.DataContracts/Dtos/Calendars/UpdateCalendarDto.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OggettoCase.DataContracts/Dtos/Users/UpdateUserDto.cs" beforeDir="false" afterPath="$PROJECT_DIR$/OggettoCase.DataContracts/Dtos/Users/UpdateUserDto.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,6 +65,7 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
+    "XThreadsFramesViewSplitterKey": "0.5009597",
     "git-widget-placeholder": "master",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -219,7 +217,7 @@
       <workItem from="1703258655776" duration="444000" />
       <workItem from="1703259121006" duration="5045000" />
       <workItem from="1703264963425" duration="26000" />
-      <workItem from="1703265073636" duration="89312000" />
+      <workItem from="1703265073636" duration="93815000" />
     </task>
     <task id="LOCAL-00001" summary="Add user">
       <option name="closed" value="true" />
@@ -269,7 +267,23 @@
       <option name="project" value="LOCAL" />
       <updated>1703412661453</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Add thigs">
+      <option name="closed" value="true" />
+      <created>1703413137588</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1703413137588</updated>
+    </task>
+    <task id="LOCAL-00008" summary="add gitignore">
+      <option name="closed" value="true" />
+      <created>1703413152843</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1703413152843</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -295,7 +309,9 @@
     <MESSAGE value="Add new things" />
     <MESSAGE value="add some changes" />
     <MESSAGE value="upd" />
-    <option name="LAST_COMMIT_MESSAGE" value="upd" />
+    <MESSAGE value="Add thigs" />
+    <MESSAGE value="add gitignore" />
+    <option name="LAST_COMMIT_MESSAGE" value="add gitignore" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -315,84 +331,24 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DotNet Breakpoints">
           <url>file://$PROJECT_DIR$/Host/Services/UserService.cs</url>
-          <line>154</line>
+          <line>158</line>
           <properties documentPath="C:\Users\ybori\RiderProjects\TechAtack.Back\Host\Services\UserService.cs" initialLine="151" containingFunctionPresentation="Method 'GetByFilterAsync'">
             <startOffsets>
-              <option value="6107" />
+              <option value="6207" />
             </startOffsets>
             <endOffsets>
-              <option value="6193" />
+              <option value="6293" />
             </endOffsets>
           </properties>
           <option name="timeStamp" value="45" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Host/Controllers/CalendarEventController.cs</url>
-          <line>97</line>
-          <properties documentPath="C:\Users\ybori\RiderProjects\TechAtack.Back\Host\Controllers\CalendarEventController.cs" initialLine="97" containingFunctionPresentation="Method 'DeleteByIdAsync'">
-            <startOffsets>
-              <option value="4867" />
-            </startOffsets>
-            <endOffsets>
-              <option value="4946" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="60" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Host/Services/GoogleService.cs</url>
-          <line>175</line>
-          <properties documentPath="C:\Users\ybori\RiderProjects\TechAtack.Back\Host\Services\GoogleService.cs" initialLine="175" containingFunctionPresentation="Method 'DeleteEventAsync'">
-            <startOffsets>
-              <option value="7324" />
-            </startOffsets>
-            <endOffsets>
-              <option value="7443" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="62" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/Host/Services/GoogleService.cs</url>
-          <line>186</line>
-          <properties documentPath="C:\Users\ybori\RiderProjects\TechAtack.Back\Host\Services\GoogleService.cs" initialLine="186" containingFunctionPresentation="Method 'DeleteEventAsync'">
-            <startOffsets>
-              <option value="7955" />
-            </startOffsets>
-            <endOffsets>
-              <option value="7989" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="63" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/OggettoCase.DataAccess/Repositories/CalendarRepository.cs</url>
-          <line>139</line>
-          <properties documentPath="C:\Users\ybori\RiderProjects\TechAtack.Back\OggettoCase.DataAccess\Repositories\CalendarRepository.cs" initialLine="139" containingFunctionPresentation="Method 'CreateCalendarAsync'">
-            <startOffsets>
-              <option value="5271" />
-            </startOffsets>
-            <endOffsets>
-              <option value="5980" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="64" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DotNet Breakpoints">
-          <url>file://$PROJECT_DIR$/OggettoCase.DataAccess/Repositories/CalendarRepository.cs</url>
-          <line>157</line>
-          <properties documentPath="C:\Users\ybori\RiderProjects\TechAtack.Back\OggettoCase.DataAccess\Repositories\CalendarRepository.cs" initialLine="157" containingFunctionPresentation="Method 'CreateCalendarAsync'">
-            <startOffsets>
-              <option value="6111" />
-            </startOffsets>
-            <endOffsets>
-              <option value="6140" />
-            </endOffsets>
-          </properties>
-          <option name="timeStamp" value="65" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <pin-to-top-manager>
+      <pinned-members>
+        <PinnedItemInfo parentTag="Type#OggettoCase.DataAccess.Models.Calendars.Calendar" memberName="EndedAt" />
+      </pinned-members>
+    </pin-to-top-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

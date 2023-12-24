@@ -16,18 +16,13 @@ public static class DtoToDbUserMapper
     /// <param name="updatedUserDto">Updated entity</param>
     /// <param name="templateId">id of template</param>
     /// <returns></returns>
-    public static User ToEntity(this UpdateUserDto updatedUserDto, long userId, Category category)
+    public static User ToEntity(this UpdateUserDto updatedUserDto, User user, Category category)
     {
-        return new User
-        {
-            Id = userId,
-            Name = updatedUserDto.Name,
-            Surname = updatedUserDto.Surname,
-            Email = "",
-            Role = updatedUserDto.Role.ToEntity(),
-            Category = category,
-            PhotoUrl = ""
-        };
+        user.Name = updatedUserDto.Name;
+        user.Surname = updatedUserDto.Surname;
+        user.Role = updatedUserDto.Role.ToEntity();
+        user.Category = category;
+        return user;
     }
 
     public static CreateUserEntityDto ToEntity(this CreateUserDto createUserDto)

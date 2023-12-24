@@ -76,7 +76,7 @@ public class UserController : ControllerBase, IUserController
     }
 
     /// <inheritdoc />
-    [HttpPut("{id:Guid}")]
+    [HttpPut("{id:long}")]
     [SwaggerOperation($"Update {nameof(UserDto)}")]
     [SwaggerResponse(200, type: typeof(UserDto), description: $"{nameof(UserDto)} successfully updated")]
     [SwaggerResponse(400, type: typeof(ValidationProblemDetails), description: "Validation error")]

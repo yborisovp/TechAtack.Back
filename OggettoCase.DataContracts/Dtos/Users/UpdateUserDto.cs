@@ -12,6 +12,5 @@ public class UpdateUserDto
 
     public UserRoleEnumDto Role { get; set; }
 
-    public UserAuthenticationTypeEnumDto AuthenticationType { get; set; }
     public int CatregoryId { get; set; }
 }

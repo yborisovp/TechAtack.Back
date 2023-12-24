@@ -15,4 +15,5 @@ public class UpdateCalendarDto
     
     public List<string>? AdditionalLinks { get; set; }
     public List<string>? EventDetails { get; set; }
+    public List<long> UserIds { get; set; }
 }

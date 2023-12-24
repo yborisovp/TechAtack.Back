@@ -18,18 +18,16 @@ public static class DtoToDbCalendarMapper
     /// <param name="updatedUserDto">Updated entity</param>
     /// <param name="templateId">id of template</param>
     /// <returns></returns>
-    public static Calendar ToEntity(this UpdateCalendarDto updateCalendarDto, Calendar pastVersion)
+    public static Calendar ToEntity(this UpdateCalendarDto updateCalendarDto, List<User> users, Calendar pastVersion)
     {
-        return new Calendar
-        {
-            Id = updateCalendarDto.Id,
-            Title = updateCalendarDto.Title ?? pastVersion.Title,
-            Description = updateCalendarDto.Description ?? pastVersion.Description,
-            StartedAt = updateCalendarDto.StartedAt ?? pastVersion.StartedAt,
-            EndedAt = updateCalendarDto.EndedAt ?? pastVersion.EndedAt,
-            AdditionalLinks = updateCalendarDto.AdditionalLinks ?? pastVersion.AdditionalLinks,
-            EventDetails = updateCalendarDto.EventDetails ?? pastVersion.EventDetails,
-        };
+        pastVersion.Title = updateCalendarDto.Title ?? pastVersion.Title;
+        pastVersion.Description = updateCalendarDto.Description ?? pastVersion.Description;
+        pastVersion.StartedAt = updateCalendarDto.StartedAt ?? pastVersion.StartedAt;
+        pastVersion.EndedAt = updateCalendarDto.EndedAt ?? pastVersion.EndedAt;
+        pastVersion.AdditionalLinks = updateCalendarDto.AdditionalLinks ?? pastVersion.AdditionalLinks;
+        pastVersion.EventDetails = updateCalendarDto.EventDetails ?? pastVersion.EventDetails;
+        pastVersion.Users = users;
+        return pastVersion;
     }
 
     public static CreateCalendarEntityDto ToEntity(this CreateCalendarEventDto createUserDto)

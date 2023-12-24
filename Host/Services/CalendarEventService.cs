@@ -75,7 +75,9 @@ public class CalendarEventService : ICalendarEventService
         }
 
         await _googleService.UpdateEventAsync(calendar.ExternalCalendarId, calendar.ExternalEventId, dtoToUpdate, ct);
-        var entityToUpdate = dtoToUpdate.ToEntity(calendar);
+        var users = await _userRepository.GetSeveralByIdAsync(dtoToUpdate.UserIds, ct);
+        
+        var entityToUpdate = dtoToUpdate.ToEntity(users, calendar);
 
         var updated = await _calendarRepository.UpdateAsync(entityToUpdate, ct);
         if (updated is null)

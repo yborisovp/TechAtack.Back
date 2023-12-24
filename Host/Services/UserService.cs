@@ -72,11 +72,15 @@ public class UserService : IUserService
             _logger.LogWarning("Impossible to confirm existence of {name of} with id: '{id}' while update", nameof(UserDto), id);
             throw new KeyNotFoundException($"{nameof(UserDto)} with id: '{id}' doesn't exist");
         }
+        
+        
+        var userExisting = await _userRepository.GetByIdAsync(id, ct);
+        
 
         var cateory = await _categoryRepository.GetByIdAsync(id, ct);
-        var templateToUpdate = dtoToUpdate.ToEntity(id, cateory);
+        var userToUpdate = dtoToUpdate.ToEntity(userExisting, cateory);
 
-        var updatedTemplate = await _userRepository.UpdateAsync(templateToUpdate, ct);
+        var updatedTemplate = await _userRepository.UpdateAsync(userExisting, ct);
         if (updatedTemplate is null)
         {
             _logger.LogError("Cannot update {name of} with id: '{id}'", nameof(UserDto), id);

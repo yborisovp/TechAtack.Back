@@ -12,7 +12,7 @@ public class User
     public required long Id { get; set; }
     
     [Column("external_id")]
-    public string ExternalId { get; set; }
+    public string? ExternalId { get; set; } = string.Empty;
 
     [MaxLength(40)]
     public string Name { get; set; } = string.Empty;
