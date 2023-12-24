@@ -20,17 +20,19 @@ public class UserService : IUserService
     private readonly IUserRepository _userRepository;
     private readonly ILogger<UserService> _logger;
     private readonly ITokenGenerator _tokenGenerator;
-    
+   private readonly ICategoryRepository _categoryRepository;
+
     /// <summary>
     /// Constructor of an service
     /// </summary>
     /// <param name="userRepository"></param>
     /// <param name="logger"></param>
-    public UserService(IUserRepository userRepository, ILogger<UserService> logger, ITokenGenerator tokenGenerator)
+    public UserService(IUserRepository userRepository, ILogger<UserService> logger, ITokenGenerator tokenGenerator, ICategoryRepository categoryRepository)
     {
         _userRepository = userRepository;
         _logger = logger;
         _tokenGenerator = tokenGenerator;
+        _categoryRepository = categoryRepository;
     }
 
     /// <inheritdoc />
@@ -71,7 +73,8 @@ public class UserService : IUserService
             throw new KeyNotFoundException($"{nameof(UserDto)} with id: '{id}' doesn't exist");
         }
 
-        var templateToUpdate = dtoToUpdate.ToEntity(id);
+        var cateory = await _categoryRepository.GetByIdAsync(id, ct);
+        var templateToUpdate = dtoToUpdate.ToEntity(id, cateory);
 
         var updatedTemplate = await _userRepository.UpdateAsync(templateToUpdate, ct);
         if (updatedTemplate is null)

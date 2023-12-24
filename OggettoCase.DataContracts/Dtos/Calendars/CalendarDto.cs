@@ -25,4 +25,5 @@ public class CalendarDto
     public required string LinkToMeeting { get; set; } 
 
     public List<string>? AdditionalLinks { get; set; }
+    public List<string>? EventDetails { get; set; }
 }

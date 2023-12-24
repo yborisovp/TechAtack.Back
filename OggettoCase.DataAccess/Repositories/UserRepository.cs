@@ -52,8 +52,17 @@ public class UserRepository : BaseRepository, IUserRepository
         _logger.LogDebug("Update {name of} with Id: '{id}' in database", nameof(User), entityToUpdate.Id);
 
         await using var context = ContextFactory.CreateDbContext();
-        var existingUser = await context.Users.AsNoTracking().Where(u => u.Id == entityToUpdate.Id).SingleAsync(ct);
-        entityToUpdate.PhotoUrl = existingUser.PhotoUrl;
+        var entry = context.Entry(entityToUpdate);
+        entry.Property(x => x.IsApproved).IsModified = false;
+        entry.Property(x => x.PhotoUrl).IsModified = false;
+        entry.Property(x => x.Id).IsModified = false;
+        entry.Property(x => x.AccessToken).IsModified = false;
+        entry.Property(x => x.ExternalId).IsModified = false;
+        entry.Property(x => x.Email).IsModified = false;
+        entry.Property(x => x.RefreshTokenExpirationDate).IsModified = false;
+        entry.Property(x => x.RefreshToken).IsModified = false;
+            //entry.Property(x => x.CalendarEvents).IsModified = false;
+        entry.Property(x => x.AuthenticationType).IsModified = false;
         
         context.Users.Update(entityToUpdate);
         await context.SaveChangesAsync(ct);

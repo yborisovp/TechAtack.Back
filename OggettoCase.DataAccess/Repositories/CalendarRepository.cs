@@ -73,8 +73,12 @@ public class CalendarRepository : BaseRepository, ICalendarRepository
         await using var context = ContextFactory.CreateDbContext();
 
         var entity = await context.Calendars.Where(e => e.Id == id).FirstOrDefaultAsync(ct);
+       
         if (entity != null)
         {
+            var user = await context.Users.Where(x => x.Id == entity.OwnerId).SingleAsync(ct);
+            user.CalendarEvents!.Remove(entity);
+            context.Users.Update(user);
             context.Calendars.Remove(entity);
         }
         else
@@ -82,7 +86,25 @@ public class CalendarRepository : BaseRepository, ICalendarRepository
             throw new KeyNotFoundException($"{nameof(Calendar)} with provided id: '{id}' - not found in database");
         }
 
-        await context.SaveChangesAsync(ct);
+        try
+        {
+            await context.SaveChangesAsync(ct);
+        }
+        catch (Exception e)
+        {
+            entity = await context.Calendars.Where(e => e.Id == id).FirstOrDefaultAsync(ct);
+            
+            if (entity != null)
+            {
+                entity.IsDeleted = true;
+                context.Update(entity);
+                await context.SaveChangesAsync(ct);
+            }
+            else
+            {
+                throw;
+            }
+        }
 
         _logger.LogDebug("{name of} with id {id} was deleted successfully", nameof(Calendar), id);
         return id;
@@ -176,7 +198,8 @@ public class CalendarRepository : BaseRepository, ICalendarRepository
 #pragma warning disable CS8620
         return calendar.Include(x => x.Comments)
             .Include(x => x.Owner)
-            .Include(x => x.Users);
+            .Include(x => x.Users)
+            .Where(x => x.IsDeleted == false);
 #pragma warning restore CS8620
     }
 }

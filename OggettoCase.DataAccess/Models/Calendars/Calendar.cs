@@ -50,4 +50,6 @@ public class Calendar
     [Column("event_details")]
     public List<string>? EventDetails { get; set; }
     
+    public bool IsDeleted { get; set; }
+    
 }

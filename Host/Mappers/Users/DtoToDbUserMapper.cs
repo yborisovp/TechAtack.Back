@@ -1,4 +1,5 @@
 using OggettoCase.DataAccess.Dtos;
+using OggettoCase.DataAccess.Models.Categories;
 using OggettoCase.DataAccess.Models.Users;
 using OggettoCase.DataContracts.Dtos.Users;
 
@@ -15,16 +16,16 @@ public static class DtoToDbUserMapper
     /// <param name="updatedUserDto">Updated entity</param>
     /// <param name="templateId">id of template</param>
     /// <returns></returns>
-    public static User ToEntity(this UpdateUserDto updatedUserDto, long userId)
+    public static User ToEntity(this UpdateUserDto updatedUserDto, long userId, Category category)
     {
         return new User
         {
             Id = userId,
             Name = updatedUserDto.Name,
             Surname = updatedUserDto.Surname,
-            Email = updatedUserDto.Email,
+            Email = "",
             Role = updatedUserDto.Role.ToEntity(),
-            AuthenticationType = updatedUserDto.AuthenticationType.ToEntity(),
+            Category = category,
             PhotoUrl = ""
         };
     }
