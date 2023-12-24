@@ -4,4 +4,4 @@ Service allow users to create google events and manage them.
 
 This is DB sceme.
 
-[view.jpg]
+[view.jpg](./view.jpg)
